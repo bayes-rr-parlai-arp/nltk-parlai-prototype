@@ -7,14 +7,25 @@ from agent import RRagent
 
 # %%
 def main():
-    default = create_agent_from_model_file(model_file='zoo:tutorial_transformer_generator/model',opt_overrides={'optimizer':'adam'})
+    default1 = create_agent_from_model_file(model_file='zoo:tutorial_transformer_generator/model',opt_overrides={'optimizer':'adam'})
+    default2 = create_agent_from_model_file(model_file='zoo:tutorial_transformer_generator/model',opt_overrides={'optimizer':'adam'})
+    default3 = create_agent_from_model_file(model_file='zoo:tutorial_transformer_generator/model',opt_overrides={'optimizer':'adam'})
 
-    agent = RRagent(default)
+    agent1 = RRagent(default1)
+    agent2 = RRagent(default2)
+    agent3 = RRagent(default3)
 
-    while (not agent.finished):
+    while (not agent1.finished):
         question = input('Play with me, enter [DONE] for ending the episode, enter [EXIT] for ending the convo: \n>')
-        print("agent:{}".format(agent.answer(question)))
-
+        try:
+            print("agent1:{}".format(agent1.answer(question)))
+            print("agent2:{}".format(agent2.answer(question)))
+            print("agent3:{}".format(agent3.answer(question)))
+        except StopIteration:
+            if not agent1.finished:
+                print("let's play again")
+            else:
+                print("Bye bye!")
 if __name__ == '__main__':
     main()
 
