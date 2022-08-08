@@ -9,7 +9,7 @@ logic:
 2. initialize the model with the input
 3. input the user input to the model
 4. get the output from the model by parlai agent's respond function
-5. detect if there is [DONE] or [EXIT] in the input, if so, restart the conversation or end the program
+5. detect if there is [DONE] or [EXIT] or [SAVE] in the input, if so, restart the conversation or end the program or save the dialogue
 6. return the output to the user
 
 ashely 03 aug 2022
@@ -21,6 +21,7 @@ class RRagent(Agent):
         self.id = 'agent'
         self.default = default
         self.finished = False
+        self.save = False
 
     # def observe(self, observation):
     #     return observation
@@ -38,6 +39,10 @@ class RRagent(Agent):
             raise StopIteration
         if '[EXIT]' in question:
             self.finished = True
+            raise StopIteration
+        if '[SAVE]' in question:
+            # save the answer to the database
+            self.save = True
             raise StopIteration
         
         return self.default.respond(question)

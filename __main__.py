@@ -6,6 +6,7 @@ from parlai.core.agents import create_agent_from_model_file
 # )
 from RRagent import RRagent
 from verbdetect import get_noun_and_verb
+from pymongo import MongoClient
 
 # %% clean pytorch cache
 import torch
@@ -29,9 +30,31 @@ __main__.py: interactive with 3 models, getting user input and output the respon
 RRagent.py: the agent class, which is used to respond the question and detect the conversation condition
 verbdetect.py: the verb and noun detection function, which is used to detect the verb and noun in the user input
 
-ashely 03 aug 2022
+ashely 08 aug 2022
 
 '''
+
+# %% create the database
+# let's connect to the localhost
+client = MongoClient()
+
+# # let's create a database 
+db = client.parlaianswers
+
+# collection for git issues
+answers = db.answers
+
+# print connection
+print("""
+Database
+==========
+{}
+
+Collection
+==========
+{}
+""".format(db, answers), flush=True
+)
 # %% main script
 def main():
     
@@ -84,34 +107,47 @@ def main():
 
     # interactive
     while (not agent1.finished):
-        
         # input question
-        question = input('Play with me, enter [DONE] for ending the convo, enter [EXIT] for ending the programe: \n>')
+        question = input('Play with me, enter [DONE] for ending the convo, enter [EXIT] for ending the programe, enter [SAVE] if you want to save the dialogue to the database: \n>')
         
         # answer question and process the answer by noun verb detection
         try:
-            answer1 = agent1.answer(question)
-            print("tutorial_reddit_model:{}".format(answer1))
-            noun,verb = get_noun_and_verb(answer1)
-            print("noun:{}".format(noun))
-            print("verb:{}".format(verb))
 
-            answer2 = agent2.answer(question)
-            print("blender_90M:{}".format(answer2))
-            noun,verb = get_noun_and_verb(answer2)
-            print("noun:{}".format(noun))
-            print("verb:{}".format(verb))
+                answer1 = agent1.answer(question)
+                print("tutorial_reddit_model:{}".format(answer1))
+                noun,verb = get_noun_and_verb(answer1)
+                print("noun:{}".format(noun))
+                print("verb:{}".format(verb))
 
-            answer3 = agent3.answer(question)
-            print("biencodertransformer:{}".format(answer3))
-            noun,verb = get_noun_and_verb(answer3)
-            print("noun:{}".format(noun))
-            print("verb:{}".format(verb))
+                answer2 = agent2.answer(question)
+                print("blender_90M:{}".format(answer2))
+                noun,verb = get_noun_and_verb(answer2)
+                print("noun:{}".format(noun))
+                print("verb:{}".format(verb))
 
+                answer3 = agent3.answer(question)
+                print("biencodertransformer:{}".format(answer3))
+                noun,verb = get_noun_and_verb(answer3)
+                print("noun:{}".format(noun))
+                print("verb:{}".format(verb))
+            
+                data = {
+                    "question": question,
+                    "answer": {
+                        "tutorial_reddit_model": answer1,
+                        "blender_90M": answer2,
+                        "biencodertransformer": answer3
+                    }
+                }
         # manipulate the conversation
         except StopIteration:
-            if not agent1.finished:
+            if not agent1.finished and not agent1.save:
                 print("let's play again")
+            # save the conversation to the database
+            elif agent1.save and not agent1.finished:
+                answers.insert_one(data)
+                agent1.save = False
+                print("data saved")
             else:
                 print("Bye bye!")
 
