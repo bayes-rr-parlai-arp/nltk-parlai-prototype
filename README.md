@@ -13,6 +13,7 @@ important version info:
 - cuda 11.3
 - cudnn 8.3.2_0
 - parlai 1.6.0
+- pymongo 4.2.0
 
 logic:
 - this prototype is devided into 3 parts:
