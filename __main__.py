@@ -7,7 +7,7 @@ from parlai.core.agents import create_agent_from_model_file
 from RRagent import RRagent
 from verbdetect import get_noun_and_verb
 from pymongo import MongoClient
-
+import datetime
 # %% clean pytorch cache
 import torch
 torch.cuda.empty_cache()
@@ -23,6 +23,7 @@ pytorch 1.12.0
 cuda 11.3
 cudnn 8.3.2_0
 parlai 1.6.0
+pymongo 4.2.0
 
 logic:
 this prototype is devided into 3 parts:
@@ -105,47 +106,68 @@ def main():
     agent2 = RRagent(default2)
     agent3 = RRagent(default3)
 
+    dialogue = {}
+    i = 1
     # interactive
     while (not agent1.finished):
         # input question
         question = input('Play with me, enter [DONE] for ending the convo, enter [EXIT] for ending the programe, enter [SAVE] if you want to save the dialogue to the database: \n>')
-        
+        strattime = datetime.datetime.now()
         # answer question and process the answer by noun verb detection
         try:
 
                 answer1 = agent1.answer(question)
+                time1 = datetime.datetime.now()
                 print("tutorial_reddit_model:{}".format(answer1))
                 noun,verb = get_noun_and_verb(answer1)
                 print("noun:{}".format(noun))
                 print("verb:{}".format(verb))
 
                 answer2 = agent2.answer(question)
+                time2 = datetime.datetime.now()
                 print("blender_90M:{}".format(answer2))
                 noun,verb = get_noun_and_verb(answer2)
                 print("noun:{}".format(noun))
                 print("verb:{}".format(verb))
 
                 answer3 = agent3.answer(question)
+                time3 = datetime.datetime.now()
                 print("biencodertransformer:{}".format(answer3))
                 noun,verb = get_noun_and_verb(answer3)
                 print("noun:{}".format(noun))
                 print("verb:{}".format(verb))
-            
-                data = {
+                
+                selection = input('Please select the answer by 1,2 or 3: \n>')
+                # once the user input is done, record the time
+                endtime = datetime.datetime.now()
+
+                temp = {
+                    "sequence":i,
                     "question": question,
                     "answer": {
                         "tutorial_reddit_model": answer1,
                         "blender_90M": answer2,
                         "biencodertransformer": answer3
-                    }
+                    },
+                    "start_time": strattime,
+                    "model_response_time": {
+                        "tutorial_reddit_model": time1,
+                        "blender_90M": time2,
+                        "biencodertransformer": time3
+                    },
+                    "user_selection": selection,
+                    "user_response_time":endtime
                 }
+                dialogue["question{}".format(i)] = temp
+                i=i+1
+
         # manipulate the conversation
         except StopIteration:
             if not agent1.finished and not agent1.save:
                 print("let's play again")
             # save the conversation to the database
             elif agent1.save and not agent1.finished:
-                answers.insert_one(data)
+                answers.insert_one(dialogue)
                 agent1.save = False
                 print("data saved")
             else:
