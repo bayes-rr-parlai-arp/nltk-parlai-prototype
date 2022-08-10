@@ -5,8 +5,8 @@ from parlai.core.agents import create_agent_from_model_file
 #     WizardTransformerRankerAgent,
 # )
 from RRagent import RRagent
-from verbdetect import get_noun_and_verb
-from pymongo import MongoClient
+from pos_tag import get_noun_and_verb, spacy_pos_tag
+# from pymongo import MongoClient
 import datetime
 # %% clean pytorch cache
 import torch
@@ -35,27 +35,28 @@ ashely 08 aug 2022
 
 '''
 
-# %% create the database
-# let's connect to the localhost
-client = MongoClient()
+# # %% create the database
+# # let's connect to the localhost
+# client = MongoClient()
 
-# # let's create a database 
-db = client.parlaianswers
+# # # let's create a database 
+# db = client.parlaianswers
 
-# collection for git issues
-answers = db.answers
+# # collection for git issues
+# answers = db.answers
 
-# print connection
-print("""
-Database
-==========
-{}
+# # print connection
+# print("""
+# Database
+# ==========
+# {}
 
-Collection
-==========
-{}
-""".format(db, answers), flush=True
-)
+# Collection
+# ==========
+# {}
+# """.format(db, answers), flush=True
+# )
+
 # %% main script
 def main():
     
@@ -118,26 +119,29 @@ def main():
 
                 answer1 = agent1.answer(question)
                 time1 = datetime.datetime.now()
-                print("tutorial_reddit_model:{}".format(answer1))
-                noun,verb = get_noun_and_verb(answer1)
-                print("noun:{}".format(noun))
-                print("verb:{}".format(verb))
+                print("\n1 - tutorial_reddit_model: {}".format(answer1))
+                noun, verb, adj = spacy_pos_tag(answer1)
+                print("noun: {}".format(noun))
+                print("verb: {}".format(verb))
+                print("adj: {}\n".format(adj))
 
                 answer2 = agent2.answer(question)
                 time2 = datetime.datetime.now()
-                print("blender_90M:{}".format(answer2))
-                noun,verb = get_noun_and_verb(answer2)
-                print("noun:{}".format(noun))
-                print("verb:{}".format(verb))
+                print("2 - blender_90M: {}".format(answer2))
+                noun, verb, adj = spacy_pos_tag(answer2)
+                print("noun: {}".format(noun))
+                print("verb: {}".format(verb))
+                print("adj: {}\n".format(adj))
 
                 answer3 = agent3.answer(question)
                 time3 = datetime.datetime.now()
-                print("biencodertransformer:{}".format(answer3))
-                noun,verb = get_noun_and_verb(answer3)
-                print("noun:{}".format(noun))
-                print("verb:{}".format(verb))
+                print("3 - biencodertransformer: {}".format(answer3))
+                noun, verb, adj = spacy_pos_tag(answer3)
+                print("noun: {}".format(noun))
+                print("verb: {}".format(verb))
+                print("adj: {}\n".format(adj))
                 
-                selection = input('Please select the answer by 1,2 or 3: \n>')
+                selection = input('Please select the answer by 1, 2 or 3: \n>')
                 # once the user input is done, record the time
                 endtime = datetime.datetime.now()
 

@@ -1,6 +1,37 @@
 import nltk
 from nltk.tokenize import word_tokenize
 import re
+import spacy
+
+### spacy
+
+def spacy_pos_tag(text):
+    model = "en_core_web_md"
+    try:
+        nlp = spacy.load(model)
+    except:
+        spacy.cli.download(model)
+        nlp = spacy.load(model)
+
+    for doc in nlp.pipe([text], disable=['parser', 'lemmatizer', 'ner']):
+
+        noun_list = []; verb_list = []; adj_list = []
+        for token in doc:
+            if token.pos_ == 'NOUN':
+                if token.text not in noun_list:
+                    noun_list.append(token.text)
+
+            if token.pos_ == 'VERB':
+                if token.text not in verb_list:
+                    verb_list.append(token.text)
+            
+            if token.pos_ == 'ADJ':
+                if token.text not in adj_list:
+                    adj_list.append(token.text)
+    
+    return noun_list, verb_list, adj_list
+
+### nltk
 
 #nltk.download('punkt')
 #nltk.download('averaged_perceptron_tagger')
