@@ -5,8 +5,8 @@ from parlai.core.agents import create_agent_from_model_file
 #     WizardTransformerRankerAgent,
 # )
 from RRagent import RRagent
-from verbdetect import get_noun_and_verb, spacy_pos_tag
-from pymongo import MongoClient
+from pos_tag import get_noun_and_verb, spacy_pos_tag
+# from pymongo import MongoClient
 import datetime
 # %% clean pytorch cache
 import torch
@@ -35,27 +35,28 @@ ashely 08 aug 2022
 
 '''
 
-# %% create the database
-# let's connect to the localhost
-client = MongoClient()
+# # %% create the database
+# # let's connect to the localhost
+# client = MongoClient()
 
-# # let's create a database 
-db = client.parlaianswers
+# # # let's create a database 
+# db = client.parlaianswers
 
-# collection for git issues
-answers = db.answers
+# # collection for git issues
+# answers = db.answers
 
-# print connection
-print("""
-Database
-==========
-{}
+# # print connection
+# print("""
+# Database
+# ==========
+# {}
 
-Collection
-==========
-{}
-""".format(db, answers), flush=True
-)
+# Collection
+# ==========
+# {}
+# """.format(db, answers), flush=True
+# )
+
 # %% main script
 def main():
     
