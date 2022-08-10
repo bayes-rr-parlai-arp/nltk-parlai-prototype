@@ -1,5 +1,6 @@
 # %%
 from parlai.core.agents import Agent
+import re
 # %%
 # class the agent
 
