@@ -45,7 +45,11 @@ class RRagent(Agent):
             self.save = True
             raise StopIteration
         
-        return self.default.respond(question)
+        # transform response to lower case
+        response = self.default.respond(question).lower()
+        
+        # remove whitespaces around punctuations
+        return re.sub(r'\s([?.!,"](?:\s|$))', r'\1', response).replace(" ' ","'")
 
 
 # %%
