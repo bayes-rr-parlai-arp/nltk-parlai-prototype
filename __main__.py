@@ -6,7 +6,7 @@ from parlai.core.agents import create_agent_from_model_file
 # )
 from RRagent import RRagent
 from pos_tag import get_noun_and_verb, spacy_pos_tag
-# from pymongo import MongoClient
+from pymongo import MongoClient
 import datetime
 # %% clean pytorch cache
 import torch
@@ -29,33 +29,33 @@ logic:
 this prototype is devided into 3 parts:
 __main__.py: interactive with 3 models, getting user input and output the response
 RRagent.py: the agent class, which is used to respond the question and detect the conversation condition
-verbdetect.py: the verb and noun detection function, which is used to detect the verb and noun in the user input
+pos_tag.py: the verb, noun, and adjective detection function, which is used to detect the verb, noun and adj in the answers
 
-ashely 08 aug 2022
+Ashely/Shijun 23 aug 2022
 
 '''
 
 # # %% create the database
-# # let's connect to the localhost
-# client = MongoClient()
+# let's connect to the localhost
+client = MongoClient()
 
-# # # let's create a database 
-# db = client.parlaianswers
+# # let's create a database 
+db = client.parlaianswers
 
-# # collection for git issues
-# answers = db.answers
+# collection for git issues
+answers = db.answers
 
-# # print connection
-# print("""
-# Database
-# ==========
-# {}
+# print connection
+print("""
+Database
+==========
+{}
 
-# Collection
-# ==========
-# {}
-# """.format(db, answers), flush=True
-# )
+Collection
+==========
+{}
+""".format(db, answers), flush=True
+)
 
 # %% main script
 def main():

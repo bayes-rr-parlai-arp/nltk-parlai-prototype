@@ -13,7 +13,7 @@ logic:
 5. detect if there is [DONE] or [EXIT] or [SAVE] in the input, if so, restart the conversation or end the program or save the dialogue
 6. return the output to the user
 
-ashely 03 aug 2022
+ashely/shijun 03 aug 2022
 '''
 
 
