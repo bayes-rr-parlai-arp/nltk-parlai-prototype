@@ -4,7 +4,7 @@
 
 ## This project developed a chatbot prototype for MND patients as a part of Rolls-Royce AI for good project
 
-prototype ver 1.0
+### prototype ver 1.1
 
 important version info:
 - python 3.8.13
@@ -19,6 +19,10 @@ logic:
 - this prototype is devided into 3 parts:
 - __main__.py: interactive with 3 models, getting user input and output the response
 - RRagent.py: the agent class, which is used to respond the question and detect the conversation condition
-- verbdetect.py: the verb and noun detection function, which is used to detect the verb and noun in the user input
+- pos_tag.py: the verb and noun and adj detection function, which is used to detect the verb and noun and adj in the asnwers
 
-ashely 03 aug 2022
+ashely/shijun 23 aug 2022
+
+
+### installation
+pip install -r requirements.txt
